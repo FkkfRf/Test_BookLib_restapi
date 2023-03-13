@@ -1,6 +1,9 @@
 # Test_BookLib_REST_API
 
-Тестирование библиотеки книг (запуск в docker)
+
+<a target="_blank" href="https://github.com/mdgy/rest_api_test_task">приложение - Библиотека книг</a>
+
+
 
 ## Endpoints:
 
