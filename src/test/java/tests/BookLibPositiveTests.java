@@ -6,6 +6,7 @@ import models.lombok.Book;
 import models.lombok.BookBody;
 import models.lombok.BooksList;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.helpmethods.GetIdList;
 
@@ -18,6 +19,7 @@ import static specs.RequiestSpecs.bookRequestSpec;
 import static specs.ResponseSpecs.createdResponseSpec201;
 import static specs.ResponseSpecs.okResponseSpec200;
 
+@Tag("Positive")
 @Severity(SeverityLevel.CRITICAL)
 @Feature("Positive")
 public class BookLibPositiveTests {

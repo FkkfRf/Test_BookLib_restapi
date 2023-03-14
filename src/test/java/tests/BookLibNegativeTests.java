@@ -34,7 +34,7 @@ public class BookLibNegativeTests {
                         .when()
                         .get("http://localhost:5000/api/book")
                         .then()
-                        .spec(notFoundResponseSpec404));
+                        .spec(notFoundResponseSpecHTML404));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class BookLibNegativeTests {
                         .when()
                         .post("http://localhost:5000/api/book")
                         .then()
-                        .spec(notFoundResponseSpec404));
+                        .spec(notFoundResponseSpecHTML404));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class BookLibNegativeTests {
     @DisplayName("Добавить новую книгу c неправильным телом JSON")
     void addBookWithBadBodyTest() {
         NegativeBookBody bookBody = step("Задать имя создаваемой книги", () -> new NegativeBookBody());
-        bookBody.setNames(null);
+        bookBody.setNames(" ");
 
         step("Отправить POST запрос", () ->
                 given()
@@ -86,7 +86,22 @@ public class BookLibNegativeTests {
                         .then()
                         .spec(badRequestResponseSpec400));
     }
+    @Test
+    @Story("POST")
+    @DisplayName("Добавить новую книгу c name = null")
+    void addBookWithNullNameTest() {
+        BookBody bookBody = step("Задать имя создаваемой книги", () -> new BookBody());
+        bookBody.setName(null);
 
+        step("Отправить POST запрос", () ->
+                given()
+                        .spec(bookRequestSpec)
+                        .body(bookBody)
+                        .when()
+                        .post()
+                        .then()
+                        .spec(badRequestResponseSpec400));
+    }
     @Test
     @Story("PUT")
     @DisplayName("Обновить описание книги с несуществующим id")
@@ -106,6 +121,22 @@ public class BookLibNegativeTests {
                         .body(bookBodyNewBody)
                         .when()
                         .put("/" + bookId)
+                        .then()
+                        .spec(notFoundResponseSpec404));
+    }
+
+    @Test
+    @Story("DELRTE")
+    @DisplayName("Удалить книгу с несуществующим id")
+    void deleteBookWithBadIdTest() {
+
+        String bookId = getIdList.getMaxId() + 1;
+
+        step("Отправить DELETE запрос", () ->
+                given()
+                        .spec(bookRequestSpec)
+                        .when()
+                        .delete("/" + bookId)
                         .then()
                         .spec(notFoundResponseSpec404));
     }
