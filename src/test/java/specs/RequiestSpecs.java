@@ -7,6 +7,7 @@ import org.aeonbits.owner.ConfigFactory;
 
 import static io.restassured.RestAssured.with;
 import static io.restassured.http.ContentType.JSON;
+import static io.restassured.http.ContentType.XML;
 
 public class RequiestSpecs {
 

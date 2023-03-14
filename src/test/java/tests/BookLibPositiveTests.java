@@ -9,9 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import tests.helpmethods.GetIdList;
 
-import static helpers.DataForTests.bookName;
+import static helpers.DataForTests.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
+import static io.restassured.filter.log.LogDetail.STATUS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.RequiestSpecs.bookRequestSpec;
@@ -24,6 +25,7 @@ import static specs.ResponseSpecs.okResponseSpec;
 public class BookLibPositiveTests {
 
     GetIdList getIdList = new GetIdList();
+
     @Test
     @Story("GET")
     @DisplayName("Получить полный список книг")
@@ -41,7 +43,6 @@ public class BookLibPositiveTests {
             assertThat(booksData.getBooks().get(0).getId()).isEqualTo("1");
             assertThat(booksData.getBooks().get(0).getAuthor()).isEqualTo("Роберт Мартин");
         });
-
     }
 
     @Test
@@ -63,6 +64,14 @@ public class BookLibPositiveTests {
 
         step("Проверка значений", () -> {
             assertEquals(bookName, bookData.getBook().getName());
+        });
+
+        step("возврат к исходному - удаление добавленной книги", () -> {
+            String bookId = getIdList.getMaxId();
+            given().spec(bookRequestSpec)
+                    .when()
+                    .delete("/" + bookId)
+                    .then().spec(okResponseSpec);
         });
     }
 
@@ -102,7 +111,18 @@ public class BookLibPositiveTests {
                         .spec(okResponseSpec)
                         .extract().as(Book.class));
 
-        assertEquals(bookName, bookData.getBook().getName());
+        step("Проверка значений", () -> {
+            assertEquals(bookAuthor, bookData.getBook().getAuthor());
+            assertEquals(bookName, bookData.getBook().getName());
+            assertEquals(bookYear, bookData.getBook().getYear());
+            assertEquals(true, bookData.getBook().isIsElectronicBook());
+        });
+
+        step("возврат к исходному - удаление добавленной книги", () ->
+                given().spec(bookRequestSpec)
+                        .when()
+                        .delete("/" + bookId)
+                        .then().spec(okResponseSpec));
     }
 
     @Test
