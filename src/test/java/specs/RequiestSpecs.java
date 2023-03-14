@@ -20,4 +20,11 @@ public class RequiestSpecs {
             .filters(CustomApiListener.withCustomTemplates())
             .baseUri(baseUri);
 
+    public static RequestSpecification bookXmlRequestSpec = with()
+            .log().headers()
+            //.log().body()
+            .contentType(XML)
+            .filters(CustomApiListener.withCustomTemplates())
+            .baseUri(baseUri);
+
 }

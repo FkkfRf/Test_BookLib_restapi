@@ -5,10 +5,9 @@ import io.qameta.allure.Step;
 import java.util.Collections;
 import java.util.List;
 
-import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static specs.RequiestSpecs.bookRequestSpec;
-import static specs.ResponseSpecs.okResponseSpec;
+import static specs.ResponseSpecs.okResponseSpec200;
 
 public class GetIdList {
 
@@ -20,7 +19,7 @@ public class GetIdList {
                         .when()
                         .get()
                         .then()
-                        .spec(okResponseSpec)
+                        .spec(okResponseSpec200)
                         .extract()
                         .jsonPath().getList("books.id");
 

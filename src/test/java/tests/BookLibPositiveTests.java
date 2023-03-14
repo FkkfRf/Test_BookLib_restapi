@@ -15,14 +15,12 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.RequiestSpecs.bookRequestSpec;
-import static specs.ResponseSpecs.createdResponseSpec;
-import static specs.ResponseSpecs.okResponseSpec;
-
+import static specs.ResponseSpecs.createdResponseSpec201;
+import static specs.ResponseSpecs.okResponseSpec200;
 
 @Severity(SeverityLevel.CRITICAL)
 @Feature("Positive")
 public class BookLibPositiveTests {
-
     GetIdList getIdList = new GetIdList();
 
     @Test
@@ -35,7 +33,7 @@ public class BookLibPositiveTests {
                         .when()
                         .get()
                         .then()
-                        .spec(okResponseSpec)
+                        .spec(okResponseSpec200)
                         .extract().as(BooksList.class));
 
         step("Проверить значения первого элемента списка", () -> {
@@ -46,8 +44,8 @@ public class BookLibPositiveTests {
 
     @Test
     @Story("GET")
-    @DisplayName("Получить описаний книги по id")
-    void getIdBooksTest() {
+    @DisplayName("Получить id книги по basePath")
+    void getBooksIdTest() {
         String bookId = "2";
         Book bookData = step("Отправить GET запрос", () ->
                 given()
@@ -55,7 +53,7 @@ public class BookLibPositiveTests {
                         .when()
                         .get("/" + bookId)
                         .then()
-                        .spec(okResponseSpec)
+                        .spec(okResponseSpec200)
                         .extract().as(Book.class));
 
         step("Проверить соответствие basePath и Id", () -> {
@@ -66,7 +64,7 @@ public class BookLibPositiveTests {
     @Test
     @Story("POST")
     @DisplayName("Добавить новую книгу")
-    void addBookDataTest() {
+    void addBookTest() {
         BookBody bookBody = step("Задать имя создаваемой книги", () -> new BookBody());
         bookBody.setName(bookName);
 
@@ -77,7 +75,7 @@ public class BookLibPositiveTests {
                         .when()
                         .post()
                         .then()
-                        .spec(createdResponseSpec)
+                        .spec(createdResponseSpec201)
                         .extract().as(Book.class));
 
         step("Проверить название(name) созданной книги", () -> {
@@ -89,14 +87,14 @@ public class BookLibPositiveTests {
             given().spec(bookRequestSpec)
                     .when()
                     .delete("/" + bookId)
-                    .then().spec(okResponseSpec);
+                    .then().spec(okResponseSpec200);
         });
     }
 
     @Test
     @Story("PUT")
-    @DisplayName("Oбновить информацию о книге по ее id")
-    void updateBookTest() {
+    @DisplayName("Oбновить описание для последней добавленной книги")
+    void updateLastBookTest() {
         BookBody bookBody = step("Задать name='Some name' для создаваемой книги", () -> new BookBody());
         bookBody.setName("Some name");
 
@@ -106,12 +104,13 @@ public class BookLibPositiveTests {
                         .when()
                         .post()
                         .then()
-                        .spec(createdResponseSpec));
+                        .spec(createdResponseSpec201));
 
         String bookId = getIdList.getMaxId();
         System.out.println(bookId);
 
-        BookBody bookBodyNewBody = step("Задать автора, имя, год, электр  для обновления книги", () -> new BookBody());
+        BookBody bookBodyNewBody = step("Задать автора, имя, год, электр  для обновления книги", () ->
+                new BookBody());
         bookBodyNewBody.setAuthor(DataForTests.bookAuthor);
         bookBodyNewBody.setName(bookName);
         bookBodyNewBody.setYear(DataForTests.bookYear);
@@ -124,7 +123,7 @@ public class BookLibPositiveTests {
                         .when()
                         .put("/" + bookId)
                         .then()
-                        .spec(okResponseSpec)
+                        .spec(okResponseSpec200)
                         .extract().as(Book.class));
 
         step("Проверить соответствие значений name, author, year. isElectronicBook заданным", () -> {
@@ -138,13 +137,13 @@ public class BookLibPositiveTests {
                 given().spec(bookRequestSpec)
                         .when()
                         .delete("/" + bookId)
-                        .then().spec(okResponseSpec));
+                        .then().spec(okResponseSpec200));
     }
 
     @Test
     @Story("DELETE")
-    @DisplayName("Удалить последнюю добавленную книгу по Id")
-    void getLastBookTest() {
+    @DisplayName("Удалить последнюю добавленную книгу")
+    void deleteLastBookTest() {
         BookBody bookBody = new BookBody();
         bookBody.setName(bookName);
 
@@ -154,7 +153,7 @@ public class BookLibPositiveTests {
                         .body(bookBody)
                         .when()
                         .post()
-                        .then().spec(createdResponseSpec));
+                        .then().spec(createdResponseSpec201));
 
         String bookId = getIdList.getMaxId();
 
@@ -164,8 +163,7 @@ public class BookLibPositiveTests {
                         .when()
                         .delete("/" + bookId)
                         .then()
-                        .spec(okResponseSpec)
-        );
+                        .spec(okResponseSpec200));
     }
 }
 
