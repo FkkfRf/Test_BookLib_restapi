@@ -12,7 +12,6 @@ import tests.helpmethods.GetIdList;
 import static helpers.DataForTests.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static io.restassured.filter.log.LogDetail.STATUS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.RequiestSpecs.bookRequestSpec;
@@ -39,9 +38,28 @@ public class BookLibPositiveTests {
                         .spec(okResponseSpec)
                         .extract().as(BooksList.class));
 
-        step("Проверка значений", () -> {
+        step("Проверить значения первого элемента списка", () -> {
             assertThat(booksData.getBooks().get(0).getId()).isEqualTo("1");
             assertThat(booksData.getBooks().get(0).getAuthor()).isEqualTo("Роберт Мартин");
+        });
+    }
+
+    @Test
+    @Story("GET")
+    @DisplayName("Получить описаний книги по id")
+    void getIdBooksTest() {
+        String bookId = "2";
+        Book bookData = step("Отправить GET запрос", () ->
+                given()
+                        .spec(bookRequestSpec)
+                        .when()
+                        .get("/" + bookId)
+                        .then()
+                        .spec(okResponseSpec)
+                        .extract().as(Book.class));
+
+        step("Проверить соответствие basePath и Id", () -> {
+            assertThat(bookData.getBook().getId()).isEqualTo(bookId);
         });
     }
 
@@ -62,7 +80,7 @@ public class BookLibPositiveTests {
                         .spec(createdResponseSpec)
                         .extract().as(Book.class));
 
-        step("Проверка значений", () -> {
+        step("Проверить название(name) созданной книги", () -> {
             assertEquals(bookName, bookData.getBook().getName());
         });
 
@@ -79,18 +97,16 @@ public class BookLibPositiveTests {
     @Story("PUT")
     @DisplayName("Oбновить информацию о книге по ее id")
     void updateBookTest() {
-        BookBody bookBody = step("Задать имя создаваемой книги", () -> new BookBody());
-        bookBody.setName(bookName);
+        BookBody bookBody = step("Задать name='Some name' для создаваемой книги", () -> new BookBody());
+        bookBody.setName("Some name");
 
         step("Добавить новую книгу", () ->
-                given()
-                        .spec(bookRequestSpec)
+                given().spec(bookRequestSpec)
                         .body(bookBody)
                         .when()
                         .post()
                         .then()
                         .spec(createdResponseSpec));
-
 
         String bookId = getIdList.getMaxId();
         System.out.println(bookId);
@@ -111,7 +127,7 @@ public class BookLibPositiveTests {
                         .spec(okResponseSpec)
                         .extract().as(Book.class));
 
-        step("Проверка значений", () -> {
+        step("Проверить соответствие значений name, author, year. isElectronicBook заданным", () -> {
             assertEquals(bookAuthor, bookData.getBook().getAuthor());
             assertEquals(bookName, bookData.getBook().getName());
             assertEquals(bookYear, bookData.getBook().getYear());
@@ -138,8 +154,7 @@ public class BookLibPositiveTests {
                         .body(bookBody)
                         .when()
                         .post()
-                        .then()
-                        .spec(createdResponseSpec));
+                        .then().spec(createdResponseSpec));
 
         String bookId = getIdList.getMaxId();
 
