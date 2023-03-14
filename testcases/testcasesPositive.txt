@@ -88,11 +88,11 @@ name="Somename"  author="Someauthor" year="Someyear" isElectronicBook=true
 
    3. ПРЕДУСЛОВИЯ
         Content-Type=application/json
-
-	4. ШАГИ
 		Добавить новую книгу
 		Отправить POST запрос http://localhost:5000/api/books
 		Определить id созданной книги
+		
+	4. ШАГИ
 		Задать автора, имя, год, электр  для обновления книги
 		Отправить PUT запрос http://localhost:5000/api/books/id
 		Проверить код состояния
@@ -118,11 +118,11 @@ name="Somename"  author="Someauthor" year="Someyear" isElectronicBook=true
 
    3. ПРЕДУСЛОВИЯ
         Content-Type=application/json
-
-	4. ШАГИ
 		Добавить новую книгу
 		Отправить POST запрос http://localhost:5000/api/books
 		Определить id созданной книги
+	
+	4. ШАГИ
 		Отправить DELETE запрос http://localhost:5000/api/books/id
 		Проверить код состояния
 		Проверить формат ответа от сервера
