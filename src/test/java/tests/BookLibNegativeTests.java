@@ -10,7 +10,7 @@ import models.lombok.NegativeBookBody;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import tests.helpmethods.GetIdList;
+import tests.helpmethods.ApiMetods;
 
 import static helpers.DataForTests.bookName;
 import static io.qameta.allure.Allure.step;
@@ -22,12 +22,12 @@ import static specs.ResponseSpecs.*;
 @Severity(SeverityLevel.NORMAL)
 @Feature("Negative")
 public class BookLibNegativeTests {
-    GetIdList getIdList = new GetIdList();
+    ApiMetods apiMetods = new ApiMetods();
 
     @Test
     @Story("GET")
     @DisplayName("Получить полный список книг по неправильному Uri")
-    void getBooksListWithBadUriTest() {
+    public void getBooksListWithBadUriTest() {
         step("Отправить GET запрос", () ->
                 given()
                         .spec(bookRequestSpec)
@@ -40,9 +40,9 @@ public class BookLibNegativeTests {
     @Test
     @Story("GET")
     @DisplayName("Получить описание книги с несуществующим id")
-    void getBookWithBadIdTest() {
+    public void getBookWithBadIdTest() {
 
-        String bookId = getIdList.getMaxId() + 1;
+        String bookId = apiMetods.getMaxId() + 1;
 
         step("Отправить GET запрос", () ->
                 given()
@@ -56,7 +56,7 @@ public class BookLibNegativeTests {
     @Test
     @Story("POST")
     @DisplayName("Добавить новую книгу по неправильному Uri")
-    void addBookWithBadUriTest() {
+    public void addBookWithBadUriTest() {
         BookBody bookBody = step("Задать имя создаваемой книги", () -> new BookBody());
         bookBody.setName(" ");
 
@@ -73,7 +73,7 @@ public class BookLibNegativeTests {
     @Test
     @Story("POST")
     @DisplayName("Добавить новую книгу c неправильным телом JSON")
-    void addBookWithBadBodyTest() {
+    public void addBookWithBadBodyTest() {
         NegativeBookBody bookBody = step("Задать имя создаваемой книги", () -> new NegativeBookBody());
         bookBody.setNames(" ");
 
@@ -86,10 +86,11 @@ public class BookLibNegativeTests {
                         .then()
                         .spec(badRequestResponseSpec400));
     }
+
     @Test
     @Story("POST")
     @DisplayName("Добавить новую книгу c name = null")
-    void addBookWithNullNameTest() {
+    public void addBookWithNullNameTest() {
         BookBody bookBody = step("Задать имя создаваемой книги", () -> new BookBody());
         bookBody.setName(null);
 
@@ -102,12 +103,13 @@ public class BookLibNegativeTests {
                         .then()
                         .spec(badRequestResponseSpec400));
     }
+
     @Test
     @Story("PUT")
     @DisplayName("Обновить описание книги с несуществующим id")
-    void updateBookWithBadIdTest() {
+    public void updateBookWithBadIdTest() {
 
-        String bookId = getIdList.getMaxId() + 1;
+        String bookId = apiMetods.getMaxId() + 1;
         BookBody bookBodyNewBody = step("Задать автора, имя, год, электр  для обновления книги", () ->
                 new BookBody());
         bookBodyNewBody.setAuthor(DataForTests.bookAuthor);
@@ -128,9 +130,9 @@ public class BookLibNegativeTests {
     @Test
     @Story("DELRTE")
     @DisplayName("Удалить книгу с несуществующим id")
-    void deleteBookWithBadIdTest() {
+    public void deleteBookWithBadIdTest() {
 
-        String bookId = getIdList.getMaxId() + 1;
+        String bookId = apiMetods.getMaxId() + 1;
 
         step("Отправить DELETE запрос", () ->
                 given()

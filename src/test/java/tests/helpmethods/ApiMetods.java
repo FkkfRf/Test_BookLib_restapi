@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 import static specs.RequiestSpecs.bookRequestSpec;
 import static specs.ResponseSpecs.okResponseSpec200;
 
-public class GetIdList {
+public class ApiMetods {
 
     @Step("Получить Id последней добавленной книги")
     public String getMaxId() {

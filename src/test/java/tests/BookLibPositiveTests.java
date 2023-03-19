@@ -8,7 +8,7 @@ import models.lombok.BooksList;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import tests.helpmethods.GetIdList;
+import tests.helpmethods.ApiMetods;
 
 import static helpers.DataForTests.*;
 import static io.qameta.allure.Allure.step;
@@ -23,7 +23,7 @@ import static specs.ResponseSpecs.okResponseSpec200;
 @Severity(SeverityLevel.CRITICAL)
 @Feature("Positive")
 public class BookLibPositiveTests {
-    GetIdList getIdList = new GetIdList();
+    ApiMetods apiMetods = new ApiMetods();
 
     @Test
     @Story("GET")
@@ -85,7 +85,7 @@ public class BookLibPositiveTests {
         });
 
         step("возврат к исходному - удаление добавленной книги", () -> {
-            String bookId = getIdList.getMaxId();
+            String bookId = apiMetods.getMaxId();
             given().spec(bookRequestSpec)
                     .when()
                     .delete("/" + bookId)
@@ -108,7 +108,7 @@ public class BookLibPositiveTests {
                         .then()
                         .spec(createdResponseSpec201));
 
-        String bookId = getIdList.getMaxId();
+        String bookId = apiMetods.getMaxId();
         System.out.println(bookId);
 
         BookBody bookBodyNewBody = step("Задать автора, имя, год, электр  для обновления книги", () ->
@@ -157,7 +157,7 @@ public class BookLibPositiveTests {
                         .post()
                         .then().spec(createdResponseSpec201));
 
-        String bookId = getIdList.getMaxId();
+        String bookId = apiMetods.getMaxId();
 
         step("Отправить DELETE запрос", () ->
                 given()
